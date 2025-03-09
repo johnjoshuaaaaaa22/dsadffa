@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <style>
+        body {
+            font-family: 'Times New Roman', Times, serif;
+            text-align: center;
+            background-color: #f4f4f4;
+        }
+        
+        .category-title {
+            font-size: 24px;
+            margin-top: 20px;
+        }
+        
+        .info-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap; 
+            margin: 10px auto;
+            width: 80%;
+        }
+        
+        .info-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            width: 150px; 
+            padding: 15px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+            text-decoration: none;
+            color: inherit;
+        }
+        
+        .info-box:hover {
+            transform: scale(1.1);
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+        }
+        
+        .info-box img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+        
+        .info-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+           
+    </style>
+</head>
+<body>
+
+    <h1>National Archives of the Philippines <br> Dashboard</h1>
+    <div class="container" id="infoList"></div>
+
+    <h2 class="category-title">Online Systems</h2>
+    <div id="onlineList" class="info-container"></div>
+
+    <h2 class="category-title">Local Systems</h2>
+    <div id="offlineList" class="info-container"></div>
+
+    <script>
+        async function fetchInfo() {
+            const response = await fetch('fetch_info.php');
+            const data = await response.json();
+            
+            const onlineContainer = document.getElementById('onlineList');
+            const offlineContainer = document.getElementById('offlineList');
+            
+            onlineContainer.innerHTML = '';
+            offlineContainer.innerHTML = '';
+        
+            data.forEach(info => {
+                const infoItem = `
+                    <a href="${info.url}" target="_blank" class="info-box">
+                        <img src="uploads/${info.logo}" alt="${info.title} Logo">
+                        <div class="info-title">${info.title}</div>
+                    </a>`;
+        
+                if (info.status.trim().toLowerCase() === "online") {
+                    onlineContainer.innerHTML += infoItem;
+                } else {
+                    offlineContainer.innerHTML += infoItem;
+                }
+            });
+        }
+        fetchInfo();              
+    </script>
+
+</body>
+</html>
